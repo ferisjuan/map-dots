@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import { Map, Modal, Panel } from './components'
 
@@ -33,7 +33,9 @@ export default function App() {
 	return (
 		<View style={styles.container}>
 			<Map onLongpress={handleLongPress} />
-			<Modal />
+			<Modal visibility={true}>
+				<Text>😎</Text>
+			</Modal>
 			<Panel />
 		</View>
 	)
