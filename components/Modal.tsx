@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Modal, StyleSheet, Text, View } from 'react-native'
 
 type Props = {
 	children: React.ReactNode
@@ -21,11 +21,14 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor: 'rgba(0,0,0,0.3)',
 	},
 	modalView: {
 		backgroundColor: '#fff',
 		borderRadius: 4,
-		padding: 20,
+		margin: 50,
+		padding: 15,
+		minWidth: Dimensions.get('window').width - 100,
 		shadowColor: '#000',
 		shadowOffset: {
 			width: 0,

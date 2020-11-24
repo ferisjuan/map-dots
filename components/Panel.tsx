@@ -1,11 +1,23 @@
 import React from 'react'
-import { Button, Dimensions, StyleSheet, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 
-export default () => {
+type Props = {
+	onPressLeftButton: () => void
+	onPressRightButton: () => void
+	leftButtonText: string
+	rightButtonText: string
+}
+
+export default ({
+	onPressLeftButton,
+	onPressRightButton,
+	leftButtonText,
+	rightButtonText,
+}: Props) => {
 	return (
 		<View style={styles.panel}>
-			<Button onPress={() => {}} title='Lista' />
-			<Button onPress={() => {}} title='Mostrar/ocultar' />
+			<Button onPress={onPressLeftButton} title={leftButtonText} />
+			<Button onPress={onPressRightButton} title={rightButtonText} />
 		</View>
 	)
 }
@@ -13,8 +25,9 @@ export default () => {
 const styles = StyleSheet.create({
 	panel: {
 		flex: 1,
+		backgroundColor: '#fff',
 		flexDirection: 'row',
-		justifyContent: 'center',
+		justifyContent: 'space-evenly',
 		alignItems: 'center',
 	},
 })

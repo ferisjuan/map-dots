@@ -1,55 +1,90 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, View } from 'react-native'
 
-import { Input, Map, Modal, Panel } from './components'
+import { Point } from './interfaces/Coordinate'
 
-interface Coordinate {
-	latitude: Number
-	longitude: Number
-}
+import { Input, List, Map, Modal, Panel } from './components'
+import {
+	Coordinates,
+	Coordinate,
+	LongPressEvent,
+} from './interfaces/Coordinate'
 
-interface Points {
-	coordinate: Coordinate
-}
-
-interface Point {
-	x: Number
-	y: Number
-}
-
-interface LongPressEvent {
-	nativeEvent: { coordinate: Coordinate; position: Point }
+enum LIST_TYPE {
+	newPoint = 'new_point',
+	allPoints = 'all_points',
 }
 
 export default function App() {
-	const [points, setPoints] = useState<Points[]>([])
-	const [nombre, setNombre] = useState('')
+	const [points, setPoints] = useState<Point[]>([])
+	const [name, setName] = useState('')
 	const [tempPoint, setTempPoint] = useState<Coordinate>({
 		latitude: 0,
 		longitude: 0,
 	})
+	const [visibilityFilter, setVisibilityFilter] = useState(LIST_TYPE.newPoint)
 	const [visibility, setVisibility] = useState(false)
 
 	const handleLongPress: any = ({ nativeEvent }: LongPressEvent) => {
 		setTempPoint(nativeEvent.coordinate)
+		setVisibilityFilter(LIST_TYPE.newPoint)
 		setVisibility(true)
 	}
 
 	const handleChangeText = (text: string): void => {
-		setNombre(text)
+		setName(text)
+	}
+
+	const handleSubmit = () => {
+		const point = {
+			name,
+			coordinate: tempPoint,
+		}
+
+		setPoints(points.concat(point))
+		cleanState()
+	}
+
+	const handleCancel = () => {
+		cleanState()
+	}
+
+	const cleanState = () => {
+		setVisibility(false)
+		setName('')
+	}
+
+	const handleShowAllPoints = (): void => {
+		setVisibilityFilter(LIST_TYPE.allPoints)
+		setVisibility(true)
 	}
 
 	return (
 		<View style={styles.container}>
-			<Map onLongpress={handleLongPress} />
+			<Map onLongpress={handleLongPress} points={points} />
+			<Panel
+				onPressLeftButton={handleShowAllPoints}
+				leftButtonText='Lista'
+				onPressRightButton={() => {}}
+				rightButtonText='Mostrar/ocultar'
+			/>
 			<Modal visibility={visibility}>
-				<Input
-					title='Nombre'
-					placeholder='Nombre del Punto'
-					onChangeText={handleChangeText}
-				/>
+				{visibilityFilter === LIST_TYPE.newPoint ? (
+					<>
+						<Input
+							title='Nombre'
+							placeholder='Nombre del Punto'
+							onChangeText={handleChangeText}
+						/>
+						<View style={styles.actionButtons}>
+							<Button title='Aceptar' onPress={handleSubmit} />
+							<Button title='Cancelar' onPress={handleCancel} />
+						</View>
+					</>
+				) : (
+					<List points={points} closeModal={handleCancel} />
+				)}
 			</Modal>
-			<Panel />
 		</View>
 	)
 }
@@ -57,9 +92,11 @@ export default function App() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
-		alignItems: 'center',
-		justifyContent: 'flex-start',
 		marginTop: 35,
+	},
+	actionButtons: {
+		flexDirection: 'row',
+		justifyContent: 'space-evenly',
+		marginTop: 30,
 	},
 })
