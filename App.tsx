@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { Map, Modal, Panel } from './components'
+import { Input, Map, Modal, Panel } from './components'
 
 interface Coordinate {
 	latitude: Number
@@ -23,18 +23,31 @@ interface LongPressEvent {
 
 export default function App() {
 	const [points, setPoints] = useState<Points[]>([])
+	const [nombre, setNombre] = useState('')
+	const [tempPoint, setTempPoint] = useState<Coordinate>({
+		latitude: 0,
+		longitude: 0,
+	})
+	const [visibility, setVisibility] = useState(false)
 
 	const handleLongPress: any = ({ nativeEvent }: LongPressEvent) => {
-		const newPoints = points.concat({ coordinate: nativeEvent.coordinate })
-		setPoints(newPoints)
-
-		console.log(points)
+		setTempPoint(nativeEvent.coordinate)
+		setVisibility(true)
 	}
+
+	const handleChangeText = (text: string): void => {
+		setNombre(text)
+	}
+
 	return (
 		<View style={styles.container}>
 			<Map onLongpress={handleLongPress} />
-			<Modal visibility={true}>
-				<Text>😎</Text>
+			<Modal visibility={visibility}>
+				<Input
+					title='Nombre'
+					placeholder='Nombre del Punto'
+					onChangeText={handleChangeText}
+				/>
 			</Modal>
 			<Panel />
 		</View>
