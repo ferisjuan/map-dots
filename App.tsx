@@ -24,6 +24,7 @@ export default function App() {
 	})
 	const [visibilityFilter, setVisibilityFilter] = useState(LIST_TYPE.newPoint)
 	const [visibility, setVisibility] = useState(false)
+	const [pointsFilter, setPointsFilter] = useState(true)
 
 	const handleLongPress: any = ({ nativeEvent }: LongPressEvent) => {
 		setTempPoint(nativeEvent.coordinate)
@@ -59,13 +60,21 @@ export default function App() {
 		setVisibility(true)
 	}
 
+	const togglePointsFilter = () => {
+		setPointsFilter(!pointsFilter)
+	}
+
 	return (
 		<View style={styles.container}>
-			<Map onLongpress={handleLongPress} points={points} />
+			<Map
+				onLongpress={handleLongPress}
+				points={points}
+				pointsFilter={pointsFilter}
+			/>
 			<Panel
 				onPressLeftButton={handleShowAllPoints}
 				leftButtonText='Lista'
-				onPressRightButton={() => {}}
+				onPressRightButton={togglePointsFilter}
 				rightButtonText='Mostrar/ocultar'
 			/>
 			<Modal visibility={visibility}>

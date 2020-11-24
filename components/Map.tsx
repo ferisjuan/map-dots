@@ -7,14 +7,16 @@ import { Point } from '../interfaces/Coordinate'
 interface MapProps {
 	onLongpress: () => {}
 	points: Point[]
+	pointsFilter: boolean
 }
 
-export default ({ onLongpress, points }: MapProps) => {
+export default ({ onLongpress, points, pointsFilter }: MapProps) => {
 	return (
 		<MapView style={styles.map} onLongPress={onLongpress}>
-			{points.map((p: Point) => (
-				<Marker key={p.name} coordinate={p.coordinate} title={p.name} />
-			))}
+			{pointsFilter &&
+				points.map((p: Point) => (
+					<Marker key={p.name} coordinate={p.coordinate} title={p.name} />
+				))}
 		</MapView>
 	)
 }
